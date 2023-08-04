@@ -13,7 +13,7 @@ Products List Index
         <div>
         {% for product in products %}
         <div>
-            <p><b>Product:</b> {{ product.name }}</p>
+            <p><b>Product:</b> <a href="{% url 'shopapp:product_details' pk=product.pk %}">{{ product.name }}</a></p>
             <p><b>Price:</b> {{ product.price }}</p>
             <p><b>Discount:</b> {% firstof product.discount 'no discount' %}</p>
         </div>
@@ -22,6 +22,6 @@ Products List Index
     {% endif %}
 </div>
 <div>
-    <a href="/shop/create_product">Create product</a>
+    <a href="{% url 'shopapp:create_product' %}">Create product</a>
 </div>
 {% endblock %}

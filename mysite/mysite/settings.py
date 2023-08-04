@@ -50,7 +50,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'requestdataapp.middslewares.set_useragent_on_request_middleware',
-    'requestdataapp.middslewares.CountRequestsMiddleware',
+    # 'requestdataapp.middslewares.CountRequestsMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
