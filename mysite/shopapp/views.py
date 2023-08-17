@@ -1,6 +1,7 @@
 from timeit import default_timer
 
 from django.contrib.auth.models import Group
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
 from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
@@ -49,7 +50,11 @@ class ProductListView(ListView):
     context_object_name = 'products'
     queryset = Product.objects.filter(archived=False)
 
-class ProductCreateView(CreateView):
+
+class ProductCreateView(UserPassesTestMixin, CreateView):
+    def test_func(self):
+        return self.request.user.is_superuser
+
     model = Product
     fields = 'name', 'price', 'description', 'discount'
     success_url = reverse_lazy('shopapp:products_list')
@@ -79,8 +84,7 @@ class ProductDeleteView(DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-
-class OrdersListView(ListView):
+class OrdersListView(LoginRequiredMixin, ListView):
     template_name = 'shopapp/orders_list.html'
     queryset = (
         Order.objects
@@ -90,7 +94,8 @@ class OrdersListView(ListView):
     context_object_name = 'orders'
 
 
-class OrdersDetailView(DetailView):
+class OrdersDetailView(PermissionRequiredMixin, DetailView):
+    permission_required = 'shopapp.view_order'
     template_name = 'shopapp/order_detail.html'
     queryset = (
         Order.objects
